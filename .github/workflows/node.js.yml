@@ -20,7 +20,7 @@ jobs:
         cache: 'npm'
     - name: Instal npm deps
       run: |
-        npm ci
+        make install
     - name: Run linter
       run: |
         make lint
@@ -29,5 +29,5 @@ jobs:
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_TEST_ID }}
       with:
-        coverageCommand: npm test -- --coverage --coverageProvider=v8
+        coverageCommand: make testCoverage
         debug: true

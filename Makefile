@@ -1,4 +1,4 @@
-install-deps:
+install:
 		npm ci
 
 test:
@@ -13,5 +13,5 @@ lint:
 fix: 
 		npx eslint --fix .
 
-test-coverage:
+testCoverage:
 		npm test -- --coverage --coverageProvider=v8
