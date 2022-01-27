@@ -23,7 +23,7 @@ jobs:
         npm ci
     - name: Run linter
       run: |
-        npx eslint .
+        make lint
     - name: Test & publish code coverage
       uses: paambaati/codeclimate-action@v3.0.0
       env:
