@@ -10,13 +10,32 @@ const getFixturePath = (filename) => join(__dirname, '..', '__fixtures__', filen
 
 let json1;
 let json2;
+let yaml1;
+let yaml2;
 let result;
+let readResult;
+
 beforeAll(() => {
   json1 = getFixturePath('file1.json');
   json2 = getFixturePath('file2.json');
-  result = readFileSync(getFixturePath('expected_result.txt'), 'utf-8');
+  yaml1 = getFixturePath('file1.yaml');
+  yaml2 = getFixturePath('file2.yaml');
+  result = getFixturePath('expected_result.txt');
+  readResult = readFileSync(result, 'utf-8');
 });
 
-test('genDiff test suite 1', () => {
-  expect(genDiff(json1, json2)).toBe(result);
+test('JSON diff test', () => {
+  expect(genDiff(json1, json2)).toBe(readResult);
+});
+
+test('YAML diff test', () => {
+  expect(genDiff(yaml1, yaml2)).toBe(readResult);
+});
+
+test('YAML to JSON diff test', () => {
+  expect(genDiff(yaml1, json2)).toBe(readResult);
+});
+
+test('JSON to YAML diff test', () => {
+  expect(genDiff(json1, yaml2)).toBe(readResult);
 });

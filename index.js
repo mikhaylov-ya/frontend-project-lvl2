@@ -1,7 +1,6 @@
-import * as fs from 'fs';
 import _ from 'lodash';
-
-const readJSONfromFile = (file) => (JSON.parse(fs.readFileSync(file, 'utf-8')));
+import { extname } from 'path';
+import parseExtension from './parser.js';
 
 const getDiffToString = (obj1, obj2) => {
   const keys = _.union(Object.keys(obj1), Object.keys(obj2));
@@ -23,9 +22,9 @@ const getDiffToString = (obj1, obj2) => {
 };
 
 const genDiff = (file1, file2) => {
-  const json1 = readJSONfromFile(file1);
-  const json2 = readJSONfromFile(file2);
-  return getDiffToString(json1, json2);
+  const firstObject = parseExtension(file1, extname(file1));
+  const secondObject = parseExtension(file2, extname(file2));
+  return getDiffToString(firstObject, secondObject);
 };
 
 export default genDiff;
