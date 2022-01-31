@@ -1,30 +1,64 @@
 import _ from 'lodash';
 import { extname } from 'path';
 import parseExtension from './parser.js';
+import stringify from './stylish.js';
 
-const getDiffToString = (obj1, obj2) => {
+const isObject = (key, obj) => (typeof obj[key] === 'object' && !Array.isArray(obj[key]));
+
+const buildDiffTree = (obj1, obj2) => {
   const keys = _.union(Object.keys(obj1), Object.keys(obj2));
   const sortedKeys = _.sortBy(keys);
+
   const checkDiff = (key) => {
-    if (_.has(obj1, key) && !_.has(obj2, key)) {
-      return `  - ${key}: ${obj1[key]}`;
-    } if (!_.has(obj1, key) && _.has(obj2, key)) {
-      return `  + ${key}: ${obj2[key]}`;
-    } if (obj1[key] !== obj2[key]) {
-      return `  - ${key}: ${obj1[key]}\n  + ${key}: ${obj2[key]}`;
-    } if (obj1[key] === obj2[key]) {
-      return `    ${key}: ${obj1[key]}`;
+    if (isObject(key, obj1) && isObject(key, obj2)) {
+      return {
+        key,
+        children: buildDiffTree(obj1[key], obj2[key]),
+        type: 'nested',
+      };
     }
-    return 'Something went wrong';
+    if (_.has(obj1, key) && !_.has(obj2, key)) {
+      return {
+        key,
+        children: obj1[key],
+        type: 'deleted',
+      };
+    }
+    if (!_.has(obj1, key) && _.has(obj2, key)) {
+      return {
+        key,
+        children: obj2[key],
+        type: 'added',
+      };
+    }
+    if (obj1[key] !== obj2[key]) {
+      return {
+        key,
+        children: [obj1[key], obj2[key]],
+        type: 'changed',
+      };
+    }
+    if (obj1[key] === obj2[key]) {
+      return {
+        key,
+        children: obj1[key],
+        type: 'unchanged',
+      };
+    }
+    return null;
   };
-  const diffString = sortedKeys.map(checkDiff).join('\n');
-  return `{\n${diffString}\n}`;
+  const diffStatusOfKeys = sortedKeys.map(checkDiff);
+
+  return diffStatusOfKeys;
 };
 
 const genDiff = (file1, file2) => {
   const firstObject = parseExtension(file1, extname(file1));
   const secondObject = parseExtension(file2, extname(file2));
-  return getDiffToString(firstObject, secondObject);
+  const rawDiffs = buildDiffTree(firstObject, secondObject);
+  // console.dir(rawDiffs, { depth: 10 });
+  return stringify(rawDiffs);
 };
 
+export { buildDiffTree, isObject };
 export default genDiff;
