@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { readFileSync } from 'fs';
 import genDiff from '../index.js';
+import stylish from '../stylish.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -25,17 +26,17 @@ beforeAll(() => {
 });
 
 test('JSON diff test', () => {
-  expect(genDiff(json1, json2)).toBe(readResult);
+  expect(stylish(genDiff(json1, json2))).toBe(readResult);
 });
 
 test('YAML diff test', () => {
-  expect(genDiff(yaml1, yaml2)).toBe(readResult);
+  expect(stylish(genDiff(yaml1, yaml2))).toBe(readResult);
 });
 
 test('YAML to JSON diff test', () => {
-  expect(genDiff(yaml1, json2)).toBe(readResult);
+  expect(stylish(genDiff(yaml1, json2))).toBe(readResult);
 });
 
 test('JSON to YAML diff test', () => {
-  expect(genDiff(json1, yaml2)).toBe(readResult);
+  expect(stylish(genDiff(json1, yaml2))).toBe(readResult);
 });

@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import { extname } from 'path';
 import parseExtension from './parser.js';
-import stringify from './stylish.js';
+// import stylish from './stylish.js';
 
-const isObject = (key, obj) => (typeof obj[key] === 'object' && !Array.isArray(obj[key]));
+const isObject = (key, obj) => (typeof obj[key] === 'object' && !Array.isArray(obj[key] && obj[key] !== null));
 
 const buildDiffTree = (obj1, obj2) => {
   const keys = _.union(Object.keys(obj1), Object.keys(obj2));
@@ -56,8 +56,7 @@ const genDiff = (file1, file2) => {
   const firstObject = parseExtension(file1, extname(file1));
   const secondObject = parseExtension(file2, extname(file2));
   const rawDiffs = buildDiffTree(firstObject, secondObject);
-  // console.dir(rawDiffs, { depth: 10 });
-  return stringify(rawDiffs);
+  return rawDiffs;
 };
 
 export { buildDiffTree, isObject };

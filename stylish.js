@@ -1,4 +1,4 @@
-const stringify = (arr, replacer = ' ', count = 4) => {
+const stylish = (arr, replacer = ' ', count = 4) => {
   const iter = (currValue, depth = 1) => {
     // console.dir(currValue, { depth: 10 });
 
@@ -6,11 +6,16 @@ const stringify = (arr, replacer = ' ', count = 4) => {
     const indentForSign = replacer.repeat(indentSize - 2);
     const currentIndent = replacer.repeat(indentSize);
     const bracketIndent = replacer.repeat(indentSize - count);
+    const isObject = (val) => (typeof val === 'object' && !Array.isArray(val) && val !== null);
 
-    const genString = (indent, key, value, sign = '') => `${indent}${sign}${key}: ${value}`;
-    // const isObject = (val) => (typeof val === 'object' && !Array.isArray(val));
+    const genString = (indent, key, value, sign = '') => {
+      if (isObject(value)) {
+        return `${indent}${sign}${key}: ${iter(value, depth + 1)}`;
+      }
+      return `${indent}${sign}${key}: ${value}`;
+    };
 
-    const keyToString = (key, value, status) => {
+    const keyToString = (key, value, status = 'unchanged') => {
       switch (status) {
         case 'nested':
           return genString(currentIndent, key, iter(value, depth + 1));
@@ -30,7 +35,10 @@ const stringify = (arr, replacer = ' ', count = 4) => {
       }
     };
 
-    // if (!_.isObject(currValue)) return keyToString(currValue);
+    if (isObject(currValue)) {
+      const nestedObj = Object.entries(currValue).map(([key, value]) => keyToString(key, value));
+      return ['{', ...nestedObj, `${bracketIndent}}`].join('\n');
+    }
 
     const entryToString = currValue
       .map(({ key, children, type }) => keyToString(key, children, type));
@@ -40,4 +48,4 @@ const stringify = (arr, replacer = ' ', count = 4) => {
   return iter(arr);
 };
 
-export default stringify;
+export default stylish;
