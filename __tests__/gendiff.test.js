@@ -10,7 +10,7 @@ const getFixturePath = (filename) => join(__dirname, '..', '__fixtures__', filen
 
 const json1 = getFixturePath('file1.json');
 const json2 = getFixturePath('file2.json');
-const yaml1 = getFixturePath('file1.yaml');
+const yaml1 = getFixturePath('file1.yml');
 const yaml2 = getFixturePath('file2.yaml');
 const stylishText = readFileSync(getFixturePath('expected_result.txt'), 'utf-8');
 const plainText = readFileSync(getFixturePath('expected_result_plain.txt'), 'utf-8');
