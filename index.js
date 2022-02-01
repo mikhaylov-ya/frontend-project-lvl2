@@ -2,8 +2,7 @@ import _ from 'lodash';
 import { extname } from 'path';
 import parseExtension from './parser.js';
 import getFormatter from './formatters/index.js';
-
-const isObject = (val) => (typeof val === 'object' && !Array.isArray(val) && val !== null);
+import isObject from './auxiliary/isObject.js';
 
 const buildDiffTree = (obj1, obj2) => {
   const keys = _.union(Object.keys(obj1), Object.keys(obj2));
@@ -59,5 +58,4 @@ const genDiff = (file1, file2, formatName = 'stylish') => {
   return getFormatter(diffTree, formatName);
 };
 
-export { buildDiffTree, isObject };
 export default genDiff;

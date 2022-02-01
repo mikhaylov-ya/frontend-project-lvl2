@@ -1,4 +1,4 @@
-import { isObject } from '../index.js';
+import isObject from '../auxiliary/isObject.js';
 
 const stylish = (arr, replacer = ' ', count = 4) => {
   const iter = (currValue, depth = 1) => {

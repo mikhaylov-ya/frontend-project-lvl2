@@ -1,4 +1,4 @@
-import { isObject } from '../index.js';
+import isObject from '../auxiliary/isObject.js';
 
 const getValue = (val) => {
   if (isObject(val)) return '[complex value]';
