@@ -1,9 +1,13 @@
-import { test, expect, beforeAll } from '@jest/globals';
+import {
+  test,
+  expect,
+  beforeAll,
+  describe,
+} from '@jest/globals';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { readFileSync } from 'fs';
 import genDiff from '../index.js';
-import stylish from '../stylish.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,30 +17,54 @@ let json1;
 let json2;
 let yaml1;
 let yaml2;
-let result;
-let readResult;
+let stylishText;
+let stylishResult;
+let plainText;
+let plainResult;
 
 beforeAll(() => {
   json1 = getFixturePath('file1.json');
   json2 = getFixturePath('file2.json');
   yaml1 = getFixturePath('file1.yaml');
   yaml2 = getFixturePath('file2.yaml');
-  result = getFixturePath('expected_result.txt');
-  readResult = readFileSync(result, 'utf-8');
+  stylishText = getFixturePath('expected_result.txt');
+  stylishResult = readFileSync(stylishText, 'utf-8');
+  plainText = getFixturePath('expected_result_plaint.txt');
+  plainResult = readFileSync(plainText, 'utf-8');
 });
 
-test('JSON diff test', () => {
-  expect(stylish(genDiff(json1, json2))).toBe(readResult);
+describe('Stylish diff format', () => {
+  test('JSON diff test', () => {
+    expect(genDiff(json1, json2, 'stylish')).toBe(stylishResult);
+  });
+
+  test('YAML diff test', () => {
+    expect(genDiff(yaml1, yaml2, 'stylish')).toBe(stylishResult);
+  });
+
+  test('YAML to JSON diff test', () => {
+    expect(genDiff(yaml1, json2, 'stylish')).toBe(stylishResult);
+  });
+
+  test('JSON to YAML diff test', () => {
+    expect(genDiff(json1, yaml2, 'stylish')).toBe(stylishResult);
+  });
 });
 
-test('YAML diff test', () => {
-  expect(stylish(genDiff(yaml1, yaml2))).toBe(readResult);
-});
+describe('Plain diff format', () => {
+  test('JSON diff test', () => {
+    expect(genDiff(json1, json2, 'plain')).toBe(plainResult);
+  });
 
-test('YAML to JSON diff test', () => {
-  expect(stylish(genDiff(yaml1, json2))).toBe(readResult);
-});
+  test('YAML diff test', () => {
+    expect(genDiff(yaml1, yaml2, 'plain')).toBe(plainResult);
+  });
 
-test('JSON to YAML diff test', () => {
-  expect(stylish(genDiff(json1, yaml2))).toBe(readResult);
+  test('YAML to JSON diff test', () => {
+    expect(genDiff(yaml1, json2, 'plain')).toBe(plainResult);
+  });
+
+  test('JSON to YAML diff test', () => {
+    expect(genDiff(json1, yaml2, 'plain')).toBe(plainResult);
+  });
 });

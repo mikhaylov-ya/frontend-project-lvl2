@@ -1,12 +1,11 @@
+import { isObject } from '../index.js';
+
 const stylish = (arr, replacer = ' ', count = 4) => {
   const iter = (currValue, depth = 1) => {
-    // console.dir(currValue, { depth: 10 });
-
     const indentSize = depth * count;
     const indentForSign = replacer.repeat(indentSize - 2);
     const currentIndent = replacer.repeat(indentSize);
     const bracketIndent = replacer.repeat(indentSize - count);
-    const isObject = (val) => (typeof val === 'object' && !Array.isArray(val) && val !== null);
 
     const genString = (indent, key, value, sign = '') => {
       if (isObject(value)) {
@@ -40,10 +39,10 @@ const stylish = (arr, replacer = ' ', count = 4) => {
       return ['{', ...nestedObj, `${bracketIndent}}`].join('\n');
     }
 
-    const entryToString = currValue
+    const lines = currValue
       .map(({ key, children, type }) => keyToString(key, children, type));
 
-    return ['{', ...entryToString, `${bracketIndent}}`].join('\n');
+    return ['{', ...lines, `${bracketIndent}}`].join('\n');
   };
   return iter(arr);
 };

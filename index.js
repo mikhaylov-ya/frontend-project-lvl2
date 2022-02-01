@@ -1,16 +1,16 @@
 import _ from 'lodash';
 import { extname } from 'path';
 import parseExtension from './parser.js';
-// import stylish from './stylish.js';
+import getFormatter from './formatters/index.js';
 
-const isObject = (key, obj) => (typeof obj[key] === 'object' && !Array.isArray(obj[key] && obj[key] !== null));
+const isObject = (val) => (typeof val === 'object' && !Array.isArray(val) && val !== null);
 
 const buildDiffTree = (obj1, obj2) => {
   const keys = _.union(Object.keys(obj1), Object.keys(obj2));
   const sortedKeys = _.sortBy(keys);
 
   const checkDiff = (key) => {
-    if (isObject(key, obj1) && isObject(key, obj2)) {
+    if (isObject(obj1[key]) && isObject(obj2[key])) {
       return {
         key,
         children: buildDiffTree(obj1[key], obj2[key]),
@@ -47,16 +47,16 @@ const buildDiffTree = (obj1, obj2) => {
     }
     return null;
   };
-  const diffStatusOfKeys = sortedKeys.map(checkDiff);
 
-  return diffStatusOfKeys;
+  return sortedKeys.map(checkDiff);
 };
 
-const genDiff = (file1, file2) => {
+const genDiff = (file1, file2, formatName = 'stylish') => {
   const firstObject = parseExtension(file1, extname(file1));
   const secondObject = parseExtension(file2, extname(file2));
-  const rawDiffs = buildDiffTree(firstObject, secondObject);
-  return rawDiffs;
+  const diffTree = buildDiffTree(firstObject, secondObject);
+
+  return getFormatter(diffTree, formatName);
 };
 
 export { buildDiffTree, isObject };
