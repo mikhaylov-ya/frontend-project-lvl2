@@ -1,9 +1,4 @@
-import {
-  test,
-  expect,
-  beforeAll,
-  describe,
-} from '@jest/globals';
+import { test, expect } from '@jest/globals';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { readFileSync } from 'fs';
@@ -13,58 +8,37 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const getFixturePath = (filename) => join(__dirname, '..', '__fixtures__', filename);
 
-let json1;
-let json2;
-let yaml1;
-let yaml2;
-let stylishText;
-let stylishResult;
-let plainText;
-let plainResult;
+const json1 = getFixturePath('file1.json');
+const json2 = getFixturePath('file2.json');
+const yaml1 = getFixturePath('file1.yaml');
+const yaml2 = getFixturePath('file2.yaml');
+const stylishText = readFileSync(getFixturePath('expected_result.txt'), 'utf-8');
+const plainText = readFileSync(getFixturePath('expected_result_plain.txt'), 'utf-8');
+const jsonText = readFileSync(getFixturePath('expected_result_json.txt'), 'utf-8');
 
-beforeAll(() => {
-  json1 = getFixturePath('file1.json');
-  json2 = getFixturePath('file2.json');
-  yaml1 = getFixturePath('file1.yaml');
-  yaml2 = getFixturePath('file2.yaml');
-  stylishText = getFixturePath('expected_result.txt');
-  stylishResult = readFileSync(stylishText, 'utf-8');
-  plainText = getFixturePath('expected_result_plaint.txt');
-  plainResult = readFileSync(plainText, 'utf-8');
+test.each([
+  { a: json1, b: json2, expected: stylishText },
+  { a: json1, b: yaml2, expected: stylishText },
+  { a: yaml1, b: json2, expected: stylishText },
+  { a: yaml1, b: yaml2, expected: stylishText },
+])('Stylish diff format test', ({ a, b, expected }) => {
+  expect(genDiff(a, b, 'stylish')).toBe(expected);
 });
 
-describe('Stylish diff format', () => {
-  test('JSON diff test', () => {
-    expect(genDiff(json1, json2, 'stylish')).toBe(stylishResult);
-  });
-
-  test('YAML diff test', () => {
-    expect(genDiff(yaml1, yaml2, 'stylish')).toBe(stylishResult);
-  });
-
-  test('YAML to JSON diff test', () => {
-    expect(genDiff(yaml1, json2, 'stylish')).toBe(stylishResult);
-  });
-
-  test('JSON to YAML diff test', () => {
-    expect(genDiff(json1, yaml2, 'stylish')).toBe(stylishResult);
-  });
+test.each([
+  { a: json1, b: json2, expected: plainText },
+  { a: json1, b: yaml2, expected: plainText },
+  { a: yaml1, b: json2, expected: plainText },
+  { a: yaml1, b: yaml2, expected: plainText },
+])('Plain diff format test', ({ a, b, expected }) => {
+  expect(genDiff(a, b, 'plain')).toBe(expected);
 });
 
-describe('Plain diff format', () => {
-  test('JSON diff test', () => {
-    expect(genDiff(json1, json2, 'plain')).toBe(plainResult);
-  });
-
-  test('YAML diff test', () => {
-    expect(genDiff(yaml1, yaml2, 'plain')).toBe(plainResult);
-  });
-
-  test('YAML to JSON diff test', () => {
-    expect(genDiff(yaml1, json2, 'plain')).toBe(plainResult);
-  });
-
-  test('JSON to YAML diff test', () => {
-    expect(genDiff(json1, yaml2, 'plain')).toBe(plainResult);
-  });
+test.each([
+  { a: json1, b: json2, expected: jsonText },
+  { a: json1, b: yaml2, expected: jsonText },
+  { a: yaml1, b: json2, expected: jsonText },
+  { a: yaml1, b: yaml2, expected: jsonText },
+])('JSON-format diff test', ({ a, b, expected }) => {
+  expect(genDiff(a, b, 'json')).toBe(expected);
 });

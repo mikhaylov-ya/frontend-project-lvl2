@@ -12,3 +12,6 @@
 
 ## 'Plain' format of nested JSONs diff
 [![asciicast](https://asciinema.org/a/FQyA3W0d1rAnYPNuBssGRwThu.svg)](https://asciinema.org/a/FQyA3W0d1rAnYPNuBssGRwThu)
+
+## 'JSON' format of nested JSONs diff
+[![asciicast](https://asciinema.org/a/H8onbb2konM6D1il1iKG1sJfC.svg)](https://asciinema.org/a/H8onbb2konM6D1il1iKG1sJfC)

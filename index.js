@@ -44,7 +44,7 @@ const buildDiffTree = (obj1, obj2) => {
         type: 'unchanged',
       };
     }
-    return null;
+    return 'Unexpected key value';
   };
 
   return sortedKeys.map(checkDiff);
