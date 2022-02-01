@@ -11,42 +11,19 @@ const buildDiffTree = (obj1, obj2) => {
   const checkDiff = (key) => {
     if (isObject(obj1[key]) && isObject(obj2[key])) {
       return {
-        key,
-        children: buildDiffTree(obj1[key], obj2[key]),
-        type: 'nested',
+        key, children: buildDiffTree(obj1[key], obj2[key]), type: 'nested',
       };
     }
-    if (_.has(obj1, key) && !_.has(obj2, key)) {
-      return {
-        key,
-        children: obj1[key],
-        type: 'deleted',
-      };
-    }
-    if (!_.has(obj1, key) && _.has(obj2, key)) {
-      return {
-        key,
-        children: obj2[key],
-        type: 'added',
-      };
-    }
-    if (obj1[key] !== obj2[key]) {
-      return {
-        key,
-        children: [obj1[key], obj2[key]],
-        type: 'changed',
-      };
-    }
-    if (obj1[key] === obj2[key]) {
-      return {
-        key,
-        children: obj1[key],
-        type: 'unchanged',
-      };
-    }
+    if (_.has(obj1, key) && !_.has(obj2, key)) return { key, children: obj1[key], type: 'deleted' };
+
+    if (!_.has(obj1, key) && _.has(obj2, key)) return { key, children: obj2[key], type: 'added' };
+
+    if (obj1[key] !== obj2[key]) return { key, children: [obj1[key], obj2[key]], type: 'changed' };
+
+    if (obj1[key] === obj2[key]) return { key, children: obj1[key], type: 'unchanged' };
+
     return 'Unexpected key value';
   };
-
   return sortedKeys.map(checkDiff);
 };
 

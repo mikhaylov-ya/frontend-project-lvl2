@@ -7,12 +7,7 @@ const stylish = (arr, replacer = ' ', count = 4) => {
     const currentIndent = replacer.repeat(indentSize);
     const bracketIndent = replacer.repeat(indentSize - count);
 
-    const genString = (indent, key, value, sign = '') => {
-      if (isObject(value)) {
-        return `${indent}${sign}${key}: ${iter(value, depth + 1)}`;
-      }
-      return `${indent}${sign}${key}: ${value}`;
-    };
+    const genString = (indent, key, value, sign = '') => `${indent}${sign}${key}: ${isObject(value) ? iter(value, depth + 1) : value}`;
 
     const keyToString = (key, value, status = 'unchanged') => {
       switch (status) {
@@ -30,7 +25,7 @@ const stylish = (arr, replacer = ' ', count = 4) => {
         case 'unchanged':
           return genString(currentIndent, key, value);
         default:
-          throw new Error('Status is wrong');
+          throw new Error(`Wrong diff status: ${status}`);
       }
     };
 
@@ -39,8 +34,7 @@ const stylish = (arr, replacer = ' ', count = 4) => {
       return ['{', ...nestedObj, `${bracketIndent}}`].join('\n');
     }
 
-    const lines = currValue
-      .map(({ key, children, type }) => keyToString(key, children, type));
+    const lines = currValue.map(({ key, children, type }) => keyToString(key, children, type));
 
     return ['{', ...lines, `${bracketIndent}}`].join('\n');
   };
