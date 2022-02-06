@@ -1,4 +1,4 @@
-import isObject from '../auxiliary/isObject.js';
+import _ from 'lodash';
 
 const stylish = (arr, replacer = ' ', count = 4) => {
   const iter = (currValue, depth = 1) => {
@@ -7,7 +7,7 @@ const stylish = (arr, replacer = ' ', count = 4) => {
     const currentIndent = replacer.repeat(indentSize);
     const bracketIndent = replacer.repeat(indentSize - count);
 
-    const genString = (indent, key, value, sign = '') => `${indent}${sign}${key}: ${isObject(value) ? iter(value, depth + 1) : value}`;
+    const genString = (indent, key, value, sign = '') => `${indent}${sign}${key}: ${_.isPlainObject(value) ? iter(value, depth + 1) : value}`;
 
     const keyToString = (key, value, status = 'unchanged') => {
       switch (status) {
@@ -29,7 +29,7 @@ const stylish = (arr, replacer = ' ', count = 4) => {
       }
     };
 
-    if (isObject(currValue)) {
+    if (_.isPlainObject(currValue)) {
       const nestedObj = Object.entries(currValue).map(([key, value]) => keyToString(key, value));
       return ['{', ...nestedObj, `${bracketIndent}}`].join('\n');
     }
