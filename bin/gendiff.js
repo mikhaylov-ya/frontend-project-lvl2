@@ -15,13 +15,15 @@ program
   .option('-f, --format <type>', 'output format', 'stylish')
   .action((filepath1, filepath2, options) => {
     const getFilePath = (filename) => path.resolve(cwd(), filename);
-    const readFile1 = fs.readFileSync(getFilePath(filepath1), 'utf-8');
-    const readFile2 = fs.readFileSync(getFilePath(filepath2), 'utf-8');
-    const extension1 = path.extname(filepath1).substring(1);
-    const extension2 = path.extname(filepath2).substring(1);
+    const readFile = (filename) => fs.readFileSync(getFilePath(filename), 'utf-8');
+
+    const readFile1 = readFile(filepath1);
+    const readFile2 = readFile(filepath2);
+    const extension1 = path.extname(filepath1).split('.').pop();
+    const extension2 = path.extname(filepath2).split('.').pop();
+
     const firstObject = parseExtension(readFile1, extension1);
     const secondObject = parseExtension(readFile2, extension2);
-
     const formDiff = genDiff(firstObject, secondObject, options.format);
     // eslint-disable-next-line no-console
     console.log(formDiff);

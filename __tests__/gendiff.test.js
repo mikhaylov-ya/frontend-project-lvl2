@@ -26,7 +26,7 @@ test.each([
   { a: yaml1, b: json2, expected: stylishText },
   { a: yaml1, b: yaml2, expected: stylishText },
 ])('Stylish diff format test', ({ a, b, expected }) => {
-  expect(genDiff(a, b, 'stylish')).toBe(expected);
+  expect(genDiff(a, b)).toBe(expected);
 });
 
 test.each([
