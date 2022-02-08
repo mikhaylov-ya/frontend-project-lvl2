@@ -3,7 +3,6 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { readFileSync } from 'fs';
 import genDiff from '../src/index.js';
-import parseExtension from '../src/parser.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,10 +10,10 @@ const __dirname = dirname(__filename);
 const getFixturePath = (filename) => join(__dirname, '..', '__fixtures__', filename);
 const readFile = (file) => readFileSync(getFixturePath(file), 'utf-8');
 
-const json1 = parseExtension(readFile('file1.json'), 'json');
-const json2 = parseExtension(readFile('file2.json'), 'json');
-const yaml1 = parseExtension(readFile('file1.yml'), 'yml');
-const yaml2 = parseExtension(readFile('file2.yaml'), 'yaml');
+const json1 = getFixturePath('file1.json');
+const json2 = getFixturePath('file2.json');
+const yaml1 = getFixturePath('file1.yml');
+const yaml2 = getFixturePath('file2.yaml');
 
 const stylishText = readFile('expected_result.txt');
 const plainText = readFile('expected_result_plain.txt');
