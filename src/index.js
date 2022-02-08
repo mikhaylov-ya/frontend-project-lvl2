@@ -11,8 +11,8 @@ const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
 
   const readFile1 = readFile(filepath1);
   const readFile2 = readFile(filepath2);
-  const extension1 = path.extname(filepath1).split('.').pop();
-  const extension2 = path.extname(filepath2).split('.').pop();
+  const extension1 = path.extname(filepath1).substring(1);
+  const extension2 = path.extname(filepath2).substring(1);
 
   const firstObj = parseExtension(readFile1, extension1);
   const secondObj = parseExtension(readFile2, extension2);
