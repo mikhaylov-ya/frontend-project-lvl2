@@ -11,7 +11,7 @@ program
   .option('-f, --format <type>', 'output format', 'stylish')
   .action((filepath1, filepath2, options) => {
     const formDiff = genDiff(filepath1, filepath2, options.format);
-    // eslint-disable-next-line no-console
+
     console.log(formDiff);
   })
   .parse();

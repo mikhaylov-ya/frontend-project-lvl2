@@ -5,14 +5,15 @@ import parseExtension from './parser.js';
 import format from './formatters/index.js';
 import buildDiffTree from './buildDiffTree.js';
 
-const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
-  const getFilePath = (filename) => path.resolve(cwd(), filename);
-  const readFile = (filename) => fs.readFileSync(getFilePath(filename), 'utf-8');
+const getFilePath = (filename) => path.resolve(cwd(), filename);
+const readFile = (filename) => fs.readFileSync(getFilePath(filename), 'utf-8');
+const extractExtension = (file) => path.extname(file).substring(1);
 
+const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
   const readFile1 = readFile(filepath1);
   const readFile2 = readFile(filepath2);
-  const extension1 = path.extname(filepath1).substring(1);
-  const extension2 = path.extname(filepath2).substring(1);
+  const extension1 = extractExtension(filepath1);
+  const extension2 = extractExtension(filepath2);
 
   const firstObj = parseExtension(readFile1, extension1);
   const secondObj = parseExtension(readFile2, extension2);
